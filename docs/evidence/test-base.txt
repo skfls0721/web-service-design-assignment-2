@@ -1,0 +1,16 @@
+
+> business-rules-assignment-2@2.0.0 test
+> node --test tests/starter.test.js
+
+✔ 기본 실행: health와 초기 행사 2개 (261.900709ms)
+✔ 로그인: 정상 사용자, 잘못된 암호, 토큰 누락·변조 (257.414958ms)
+✔ 조회 권한: 학생은 운영자 명단을 읽을 수 없음 (221.261042ms)
+✔ 입력 계약: 신원·상태 위조 필드 거부, 저장 변경 없음 (224.990458ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1066.473916
