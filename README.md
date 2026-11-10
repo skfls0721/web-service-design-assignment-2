@@ -76,11 +76,11 @@ npm run db:reset
 
 ## AI 활용 및 출처
 
-Anthropic Claude를 사용했습니다.
+Anthropic Claude를 활용했습니다.
 
-- AI가 한 일: `src/application-service.js`의 `apply`, `cancel`, `approve`, `revoke` 구현 초안 작성(트랜잭션 구조, FIFO 대기자 선택 SQL 포함), 테스트 결과 해석, 화면 검증 절차 안내, README와 보고서 작성 보조
-- 본인이 한 일: 제공 코드·DB 스키마·API 문서를 확인해 Claude에 제공, 구현 적용, `npm test`와 `npm run test:assignment` 실행으로 T01~T32 통과 확인, U01~U05 화면 검증을 직접 수행하고 캡처, 증거가 부족한 부분 재촬영, 서버 재시작 후 데이터 유지 확인, 저장소와 보고서 제출 정리
-- 참고 자료: 과제 안내문, `docs/API.md`, [Node.js 24 SQLite 문서](https://nodejs.org/docs/latest-v24.x/api/sqlite.html), [Express 5 문서](https://expressjs.com/en/5x/api/)
+- **AI가 한 일:** `src/application-service.js`의 `apply`, `cancel`, `approve`, `revoke` 구현 초안과 트랜잭션 구조, FIFO 대기자 선택 SQL을 제안하고 테스트 결과 해석과 화면 검증 절차를 안내했습니다. README와 보고서 작성도 보조했습니다.
+- **본인이 한 일:** 과제 안내문과 API·DB 구조를 확인한 뒤 Claude가 제안한 초안을 적용했습니다. 코드를 읽으며 상태 변경과 이력이 트랜잭션으로 처리되는지, 대기자가 행사별로 `created_at ASC, id ASC` 순으로 최대 한 명 선택되는지, 자동 승급 이력이 승인 취소 이력과 연결되는지 확인했습니다. 이후 `npm test`와 `npm run test:assignment`를 실행해 T01~T32 통과를 확인하고, U01~U05 화면 검증과 캡처, 서버 재시작 후 데이터 유지를 확인했습니다.
+- **참고 자료:** 과제 안내문, `docs/API.md`, [Node.js 24 SQLite 문서](https://nodejs.org/docs/latest-v24.x/api/sqlite.html), [Express 5 문서](https://expressjs.com/en/5x/api/)
 
 ## 제출 전
 
