@@ -1,0 +1,8 @@
+stateDiagram-v2
+    [*] --> PENDING
+    PENDING --> CANCELLED: 학생 본인 대기 취소
+    PENDING --> APPROVED: 담당 운영자 직접 승인, 정원 여유
+    PENDING --> APPROVED: 승인 취소 시 FIFO 첫 대기자 1명 승급
+    APPROVED --> REVOKED: 담당 운영자 승인 취소
+    CANCELLED --> [*]
+    REVOKED --> [*]

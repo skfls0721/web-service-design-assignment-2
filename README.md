@@ -48,9 +48,9 @@ npm run db:reset
 - `cancel`: 본인의 PENDING 신청만 취소하고 CANCELLED 및 CANCEL 이력을 저장합니다.
 - `approve`: 담당 운영자의 요청과 최신 상태·정원을 검사하고 APPROVED 및 APPROVE 이력을 저장합니다.
 - `revoke`: 담당 운영자가 승인된 신청을 사유와 함께 취소하고, 같은 행사의 FIFO 대기자 한 명을 자동 승급합니다. REVOKE와 AUTO_APPROVE 이력의 원인 ID를 연결합니다.
-- 모든 상태 변경과 이력 저장은 같은 SQLite 트랜잭션에서 처리합니다. 저장 오류가 나면 전체 변경을 롤백합니다.
+- 모든 상태 변경과 이력 저장은 같은 SQLite 트랜잭션(`BEGIN IMMEDIATE` ... `COMMIT`)에서 처리합니다. 저장 오류가 나면 `ROLLBACK`으로 전체 변경을 되돌립니다.
 
-대기자 순서는 같은 행사의 PENDING 신청에서 `created_at ASC, id ASC`로 고정합니다. 직접 승인에는 FIFO를 적용하지 않습니다. 자세한 함수와 SQL, 상태 전이도, 승인 취소 시퀀스 다이어그램은 보고서에 설명했습니다.
+대기자 순서는 같은 행사의 PENDING 신청에서 `created_at ASC, id ASC`로 고정합니다. 직접 승인에는 FIFO를 적용하지 않습니다. 상태 전이도는 [Mermaid Live Editor](https://mermaid.live/edit#pako:eNp9kU1LAkEYx7_K8BxjFV1b1t1DILqGJCoeOtR2WNxJBXdXxt2wREiioPRQB-lNw1tRHaKE1q_kTt-hfVODojnN85_5_Z556UDFUDGI0DIVE2fqSpUoWuSAlXXkjt21PRSJbKCSVMjkCptBGBb-QjpVSEv5vJQR0dfwlp6MkfNh07GNnMHx3H5D9POJng1-c6lSqVzc9jCnP3X6M0TvpvSmRx8uEX3s0ckVohcz18MgOhnSeze9fqWjyX-iAAg7ItofoWwuW0T0_SU8jCePO8-n3s65fR64FrwvK0vbxa2_D_VTHpDLq_uo-1JBHDpWITBQJXUVRJNYmAENE03xSuh4gAxmDWtYBtGdEqxa7UjFaBhEBlnvumhT0XcMQ1vQxLCqNRD3lUbLraymuvq0ZUqwrmKSNizdBJFlfQeIHWiDmIhFY-scy7MJXhA4NiZwDBy6m-JCNCHwSSGejPMcLyS6DBz5XWPRJM91vwEIJs4k)에서 만들었습니다. 원본은 [`docs/state-transition.mmd`](docs/state-transition.mmd), 렌더링 이미지는 [`docs/state-transition-mermaid.png`](docs/state-transition-mermaid.png)에 있습니다. 트랜잭션과 승인 취소 시퀀스 다이어그램은 보고서에 설명했습니다.
 
 ## 검증 결과
 
@@ -71,14 +71,17 @@ npm run db:reset
 - `tests/`: 기반 테스트, 필수 테스트, 선택 심화 테스트
 - `docs/API.md`: API 계약과 오류 규칙
 - `docs/report.pdf`: 설계·구현·검증 보고서
+- `docs/state-transition.mmd`, `docs/state-transition-mermaid.png`: Mermaid 상태 전이도 원본과 이미지
 - `docs/evidence/`: 자동 테스트 출력과 U01~U05 화면 캡처
 
 ## AI 활용 및 출처
 
-OpenAI Codex(GPT-6)를 요구사항 정리, `src/application-service.js`의 업무 규칙·트랜잭션 검토, 테스트 결과 해석, U05 증거 구성 안내, README와 보고서 작성에 활용했습니다. 본인이 서비스를 실행해 필수 테스트를 검증하고 U01~U05 화면 흐름을 직접 수행·캡처했습니다. 이 제출 정리 과정에서 서비스 소스 코드는 변경하지 않았습니다.
+Anthropic Claude를 사용했습니다.
 
-과제에서 제공된 안내문과 `docs/API.md`, Node.js 24 SQLite API, Express 5 API, node-jsonwebtoken 문서를 참고했습니다. 링크와 상세 사용 기록은 보고서에 적었습니다.
+- AI가 한 일: `src/application-service.js`의 `apply`, `cancel`, `approve`, `revoke` 구현 초안 작성(트랜잭션 구조, FIFO 대기자 선택 SQL 포함), 테스트 결과 해석, 화면 검증 절차 안내, README와 보고서 작성 보조
+- 본인이 한 일: 제공 코드·DB 스키마·API 문서를 확인해 Claude에 제공, 구현 적용, `npm test`와 `npm run test:assignment` 실행으로 T01~T32 통과 확인, U01~U05 화면 검증을 직접 수행하고 캡처, 증거가 부족한 부분 재촬영, 서버 재시작 후 데이터 유지 확인, 저장소와 보고서 제출 정리
+- 참고 자료: 과제 안내문, `docs/API.md`, [Node.js 24 SQLite 문서](https://nodejs.org/docs/latest-v24.x/api/sqlite.html), [Express 5 문서](https://expressjs.com/en/5x/api/)
 
 ## 제출 전
 
-최종 제출 커밋 SHA를 LMS 온라인 작성란에 기록하고, `docs/report.pdf`와 같은 버전을 LMS 파일 제출란에도 첨부합니다. 저장소는 GitHub에서 복제할 수 있도록 공개로 설정해야 합니다. `node_modules`, 생성 DB·JWT 키, 실제 `.env`, 개인 정보는 저장소에 포함하지 않습니다.
+최종 제출 커밋 SHA를 LMS 온라인 작성란에 기록하고, `docs/report.pdf`와 같은 버전을 LMS 파일 제출란에도 첨부합니다. 저장소는 공개로 설정되어 있습니다. `node_modules`, 생성 DB·JWT 키, 실제 `.env`, 개인 정보는 저장소에 포함하지 않습니다.
