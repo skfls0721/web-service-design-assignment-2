@@ -13,5 +13,5 @@ if(!secret) {
 if(secret.length<32)throw new Error('JWT_SECRET은 32자 이상이어야 합니다.');
 const port=Number(process.env.PORT||3000);if(!Number.isInteger(port)||port<1||port>65535)throw new Error('PORT는 1~65535 정수여야 합니다.');
 const db=openDb(process.env.DB_PATH),app=createApp({db,secret});
-const server=app.listen(port,'127.0.0.1',()=>console.log(`과제 2 시작: http://127.0.0.1:${port}\n로그인·조회는 제공됩니다. 신청·대기 취소·승인·승인 취소는 TODO 구현 전 501입니다.`));
+const server=app.listen(port,'127.0.0.1',()=>console.log(`과제 2 시작: http://127.0.0.1:${port}\n로그인·조회·신청·대기 취소·승인·승인 취소 API 준비 완료.`));
 for(const signal of ['SIGINT','SIGTERM'])process.on(signal,()=>server.close(()=>{db.close();process.exit(0);}));
